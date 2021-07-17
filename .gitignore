@@ -11,3 +11,4 @@ Debug/*
 
 # ...even if they are in subdirectories
 # !*/
+/Debug/
