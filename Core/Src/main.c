@@ -23,11 +23,13 @@
 #include "fatfs.h"
 #include "sdio.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "rsms.h"
 #include "OSUserInclude.h"
 /* USER CODE END Includes */
 
@@ -49,6 +51,8 @@
 
 /* USER CODE BEGIN PV */
 
+IFC_PeripheralStruct ifc;
+RSMS_PeripheralStruct rsms;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,7 +63,16 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+//uint16_t data[8];
+//uint8_t indx;
+//char str[15 + 8 * 6];
+//void measureStuff(ADS_8688 *adc){
+//	for(indx = 0; indx < 8; indx++){
+//		data[indx] = ADS_measure(adc);
+//	}
+//	snprintf(str, 15 + 8 * 6, "Data: %06u %06u %06u %06u %06u %06u %06u %06u\n", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7]);
+//	xprintf(str);
+//}
 /* USER CODE END 0 */
 
 /**
@@ -96,46 +109,47 @@ int main(void)
   MX_SPI2_Init();
   MX_USART2_UART_Init();
   MX_FATFS_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
+
+	// RSMS ============================================
+	rsms.LD1.pin = LD0_Pin;
+	rsms.LD1.port = LD0_GPIO_Port;
+	rsms.LD2.pin = LD1_Pin;
+	rsms.LD2.port = LD1_GPIO_Port;
+	rsms.LD3.pin = LD2_Pin;
+	rsms.LD3.port = LD2_GPIO_Port;
+	rsms.LD4.pin = LD3_Pin;
+	rsms.LD4.port = LD3_GPIO_Port;
+
+	rsms.busIFC = &hcan3;
+
+	rsms.hspi_t = &hspi1;
+	rsms.chipSelect_t.pin = SPI1_CS_Pin;
+	rsms.chipSelect_t.port = SPI1_CS_GPIO_Port;
+
+	rsms.hspi_p = &hspi2;
+	rsms.chipSelect_p.pin = SPI2_CS_Pin;
+	rsms.chipSelect_p.port = SPI2_CS_GPIO_Port;
+
+	rsms.serialDebug = &huart2;
+
+	rsms.htim = &htim6;
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	/*
-	initSDfileHandling();
-	SDFH_writeTest();
-	SDFH_openFile("FIL1.txt");
-	for (uint32_t i = 0; i < 10; i++) {
-		uint8_t len;
-		getNumberLength(&len, i);
-		len += 7;
-		char word[len];
-		sprintf(word, "Wert %d: ", (int) i);
-		SDFH_writeToFile(word, len);
-		SDFH_writeIntToFile(HAL_GetTick());
-		SDFH_writeToFile("\n", 1);
-	}
-	SDFH_closeFile();
-	*/
 
-	uint32_t time = 1000;
+	RSMS_init(&rsms);
+	HYOS_start();
+
 	while (1) {
+		getTasks()->whileHandle();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		HAL_GPIO_TogglePin(LD0_GPIO_Port, LD0_Pin);
-		HAL_Delay(time);
-//		ADS_measure(&adc2);
-		HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-		HAL_Delay(time);
-//		ADS_measure(&adc2);
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-		HAL_Delay(time);
-//		ADS_measure(&adc2);
-		HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
-		HAL_Delay(time);
-//		ADS_measure(&adc2);
+
 	}
   /* USER CODE END 3 */
 }
@@ -194,6 +208,10 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	RSMS_BOARD_tick();
+}
 
 /* USER CODE END 4 */
 
