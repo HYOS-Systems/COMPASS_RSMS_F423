@@ -1,5 +1,0 @@
-rsms_board.c:15:6:RSMS_BOARD_initUsart	8	static
-rsms_board.c:21:6:RSMS_BOARD_initCAN	8	static
-rsms_board.c:27:6:RSMS_BOARD_initSDLogging	8	static
-rsms_board.c:34:6:RSMS_BOARD_initADCs	32	static
-rsms_board.c:55:6:RSMS_BOARD_init	16	static

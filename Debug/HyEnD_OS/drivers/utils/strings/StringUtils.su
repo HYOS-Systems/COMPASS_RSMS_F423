@@ -1,2 +1,0 @@
-StringUtils.c:12:6:getNumberLength	32	static
-StringUtils.c:50:6:test_getNumberLength	40	static
