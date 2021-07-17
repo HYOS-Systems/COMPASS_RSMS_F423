@@ -31,7 +31,7 @@ void MX_CAN3_Init(void)
 {
 
   hcan3.Instance = CAN3;
-  hcan3.Init.Prescaler = 12;
+  hcan3.Init.Prescaler = 6;
   hcan3.Init.Mode = CAN_MODE_NORMAL;
   hcan3.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan3.Init.TimeSeg1 = CAN_BS1_6TQ;
