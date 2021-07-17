@@ -32,9 +32,14 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>COMPASS_RSMS_HYOS-Impl</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/HYOS_lib/COMPASS_RSMS_HYOS-Impl</locationURI>
+		</link>
+		<link>
 			<name>HyEnD_OS</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/HyEnD_OS</locationURI>
+			<locationURI>WORKSPACE_LOC/HYOS_lib/HyEnD_OS</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
